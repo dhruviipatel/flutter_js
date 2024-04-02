@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_js/flutter_js.dart';
+import 'package:test_js/checkout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Home(),
+      home: const CheckoutPage(),
     );
   }
 }
@@ -47,7 +48,7 @@ class Home extends StatelessWidget {
             print('error: ${e.details}');
           }
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -56,7 +57,7 @@ class Home extends StatelessWidget {
 Future<int> addFromJs(
     JavascriptRuntime jsRuntime, int firstno, int secondno) async {
   String jsData = await rootBundle.loadString('assets/jsfile.js');
-  final result = jsRuntime.evaluate(jsData + """add($firstno, $secondno)""");
+  final result = jsRuntime.evaluate("""${jsData}add($firstno, $secondno)""");
 
   final jsstringresult = result.stringResult;
 
