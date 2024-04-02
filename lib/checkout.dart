@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_js/flutter_js.dart';
 
 class CheckoutPage extends StatefulWidget {
@@ -26,19 +27,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
     });
   }
 
+  Future<void> _loadCheckoutJS() async {
+    String checkoutJS = await rootBundle.loadString('assets/checkout.js');
+    _jsRuntime.evaluate(checkoutJS);
+  }
+
   Future<void> _executeCheckout() async {
     if (_isReady) {
+      String jsData = await rootBundle.loadString('assets/chekout.js');
       String jsCode = """
-        // Your JavaScript code here
-        // Use the checkout() function
         checkout({
           sessionToken: "${_sessionController.text}",
           merchantSiteId: "<your merchantSiteId>",
-          merchantId: "<your merchantId>",
-          // Add other parameters here
+          merchantId: "<your merchantId>",     
         });
       """;
-      _jsRuntime.evaluate(jsCode);
+      final result = _jsRuntime.evaluate(jsData + jsCode);
+
+      // _jsRuntime.evaluate(jsCode);
     }
   }
 
