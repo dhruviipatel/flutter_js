@@ -1,0 +1,162 @@
+<html>
+
+<head>
+  <link href="payment.css" rel="stylesheet">
+</head>
+
+<body>
+  <form action="/charge" method="post" id="payment-form">
+    <div class="row">
+      <div class="field">
+        <div id="card-number" class="input"></div>
+        <label for="card-number" data-tid="scwsdk.form.card_number_label">
+          Card number
+        </label>
+        <div class="underline"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field col6">
+        <div id="card-expiry" class="input empty"></div>
+        <label for="card-expiry" data-tid="scwsdk.form.card_expiry_label">
+          Expiration
+        </label>
+        <div class="underline "></div>
+      </div>
+      <div class="field col6">
+        <div id="card-cvc" class="input empty"></div>
+        <label for="card-cvc" data-tid="scwsdk.form.card_cvc_label">
+          CVC
+        </label>
+        <div class="underline "></div>
+      </div>
+    </div>
+  </form>
+  <button onclick="main()">Submit Payment</button>
+</body>
+<script src="safecharge.js"></script>
+<!-- 
+<script src="https://cdn.safecharge.com/safecharge_resources/v1/websdk/safecharge.js"></script> -->
+<script>
+
+  var sfc = SafeCharge({
+    env: 'int',
+    merchantId: '2950421966619096832',
+    sessionToken: "06e67b6a-17cf-47bb-b9b3-379f8bad4ac1",
+
+    merchantSiteId: '246018',
+  });
+  window.sfc = sfc
+  var ScFields = sfc.fields({
+    fonts: [{
+      cssUrl: 'https://fonts.googleapis.com/css?family=Source+Code+Pro'
+    },],
+    locale: 'en'
+  });
+
+  var ScFieldStyles = {
+    base: {
+      color: '#32325D',
+      fontWeight: 500,
+      fontFamily: 'Roboto, Consolas, Menlo, monospace',
+      fontSize: '16px',
+      fontSmoothing: 'antialiased',
+      '::placeholder': {
+        color: '#CFD7DF',
+      },
+      ':-webkit-autofill': {
+        color: '#e39f48',
+      },
+    },
+    invalid: {
+      color: '#E25950',
+      '::placeholder': {
+        color: '#FFCCA5',
+      },
+    },
+  };
+  var ScFieldClasses = {
+    focus: 'focused',
+    empty: 'empty',
+    invalid: 'invalid',
+    complete: 'complete',
+  };
+
+  var style = {
+    base: {
+      fontFamily: 'Roboto, sans-serif',
+      color: "#045d47",
+      fontSize: "14px",
+      fontSmoothing: 'antialiased',
+      '::placeholder': {
+        color: '#00becf'
+      }
+    },
+    invalid: {
+      color: '#e5312b',
+      ':focus': {
+        color: '#303238'
+      }
+    },
+    empty: {
+      color: '#00becf',
+      '::placeholder': {
+        color: '#00becf'
+      }
+    },
+    valid: {
+      color: '#00A86b'
+    }
+  };
+
+  // var scard = ScFields.create('card', {
+  //   style: style,
+  //   card_brand: 'visa'
+  // });
+
+  var scard = ScFields.create('ccNumber', {
+    style: ScFieldStyles,
+    classes: ScFieldClasses,
+  });
+  scard.attach('#card-number');
+
+  var cardExpiry = ScFields.create('ccExpiration', {
+    style: ScFieldStyles,
+    classes: ScFieldClasses,
+  });
+  cardExpiry.attach('#card-expiry');
+
+  var cardCvc = ScFields.create('ccCvc', {
+    style: ScFieldStyles,
+    classes: ScFieldClasses,
+  });
+  cardCvc.attach('#card-cvc');
+  // scard.attach(document.getElementById('card-field-placeholder'));
+  // window.scard = scard;
+
+
+
+
+  function main() {
+    document.getElementById('result').innerHTML = '';
+
+    sfc.createPayment({
+      "userTokenId": "230811147",
+      "clientUniqueId": "695701003", // optional
+      "cardHolderName": document.getElementById('cardHolderName').value,
+      "paymentOption": scard,
+      "billingAddress": {
+        "email": "someone@somedomain.com",
+        "country": "GB"
+      }
+    }, function (res) {
+      console.log(res);
+      document.getElementById('result').innerHTML = JSON.stringify(res, null, 4)
+    })
+  }
+</script>
+
+<script>
+  console.log('init sdk===>')</script>
+
+</html>

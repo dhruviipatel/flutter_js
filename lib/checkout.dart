@@ -22,21 +22,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   Future<void> _initJSRuntime() async {
     _jsRuntime = getJavascriptRuntime();
-    // _loadCheckoutJS();
     setState(() {
       _isReady = true;
     });
   }
 
-  Future<void> _loadCheckoutJS() async {
-    String checkoutJS = await rootBundle.loadString('assets/checkout.js');
-    _jsRuntime.evaluate(checkoutJS);
-  }
-
   Future<void> _executeCheckout() async {
     if (_isReady) {
       String checkoutJS = await rootBundle.loadString('assets/checkout.js');
-      //final checkoutFn = await _jsRuntime.getProperty('checkout');
 
       final result = _jsRuntime.evaluate('''${checkoutJS}checkout();''');
       print(result);
@@ -55,11 +48,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextField(
-                    controller: _sessionController,
-                    decoration:
-                        const InputDecoration(labelText: 'Session Token'),
-                  ),
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: _executeCheckout,

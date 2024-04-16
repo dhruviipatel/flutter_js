@@ -1,0 +1,99 @@
+
+
+<html>
+<head>
+    <script src="https://cdn.safecharge.com/safecharge_resources/v1/websdk/safecharge.js"></script>
+    <script>
+
+const initCheckout = () => {
+    const onResult = function(result) {
+      console.log(result)
+      console.log('Final callback data received by caller', JSON.stringify(result))
+    }
+
+
+    
+    sfc = SafeCharge({
+    sessionToken: '917d3195-5828-48ed-95ab-d9d321e5987b', // received from openOrder API
+    env: "int", // "prod"
+    merchantId: "2950421966619096832", // as assigned by Nuvei
+    merchantSiteId: "246018", // as assigned by Nuvei
+    blockCards: [["visa","credit","corporate"], ["amex", "GB", "prepaid"]], // Visa corporate credit cards and British prepaid Amex cards are blocked
+    blockPasteCard: true,
+    disableNuveiAnalytics: true,
+    showAccountCapture: true,
+    // onResult: function(result) {
+    //     console.log('Payment result =>', result);
+    // },
+    onResult:(result)=> {
+        console.log('PaymentResult =>', result);
+      console.log(result)
+      console.log('Final callback data received by caller', JSON.stringify(result))
+    },
+    onPaymentEvent: function(result) {
+        console.log('onPaymentEvent =>', result);
+    },
+    logLevel: "4", // "0" (default)
+    support19Digits: true, // false (default)
+});
+
+sfc.createPayment({
+    sessionToken: '917d3195-5828-48ed-95ab-d9d321e5987b', // received from openOrder API
+    openAmount: "200",
+    paymentOption: {
+        card: {
+            cardNumber: "5111426646345761",
+            cardHolderName: "John Smith",
+            expirationMonth: "12",
+            expirationYear: "2030",
+            CVV: "217"
+        },
+            subMethod: {
+                subMethod: "Skrill1Tap"
+            }
+    },
+    billingAddress: {
+        firstName: "John",
+        lastName: "Smith",
+        email: "john.smith@email.com",
+        country: "US"
+    },
+    cardLogo: {
+        cardLogoPosition: "right",
+            backgroundSize: "30px 40px"
+        },  //or "cardLogo": "false" -> to hide the card logo
+    apmWindowType: "newTab", // popup (default), redirect, customRedirect
+    alwaysCollectCvv: "optional",
+}, 
+function(res) {
+    console.log('FunctionRespone=>',res)
+    // if (res.cancelled === true) {
+    //     example.querySelector('.token').innerText = 'cancelled';
+    // } else {
+    //     example.querySelector('.token').innerText = res.transactionStatus +
+    //         ' - Reference: ' + res.transactionId;
+    // }
+    //example.classList.add('submitted');
+}
+);
+  
+}
+    </script>
+</head>
+
+<body>
+    <form action="/charge" method="post" id="payment-form">
+        <div class="form-row">
+            <label for="card-field-placeholder">
+                Credit or debit card
+            </label>
+            <div id="card-field-placeholder" class="some initial css-classes">
+                <!-- SFC Card widget is inserted here. -->
+            </div>
+            <!-- Used to display form errors. -->
+            <div id="scard-errors" role="alert"></div>
+        </div>
+    </form>
+    <button style="height: 200;width: 300;"  onclick="initCheckout();">Submit Payment</button>
+</body>
+</html>

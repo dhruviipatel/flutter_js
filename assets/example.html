@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=1,minimal-ui">
+    <script src="https://cdn.jsdelivr.net/npm/osi4kjb-embed-checkout-form@1.0.0/dist/ecf.min.js"></script>
+    <script>
+        const initCheckout = () => {
+            const onResult = function (result) {
+                console.log(result)
+                console.log('Final callback data received by caller', JSON.stringify(result))
+            }
+
+            checkout({
+                env: 'test', //prod for production
+                renderTo: '.container_for_checkout', //your placeholder for the checkout component
+                //credentials
+                sessionToken: "74f4b08a-bb92-4db6-ac87-46a5f8000ed4",
+                merchantSiteId: "246018",
+                merchantId: "2950421966619096832",
+                //amount and currency for presentation purposes
+                currency: 'CAD',
+                amount: 135,
+                //basic settings
+                country: 'CA',
+                locale: 'en',
+                fullName: 'dhruvi', //simulates 3DS challenge, FL-BRW1 will simulate frictionless
+                email: 'integration@nuvei.com',
+
+                onResult: onResult, //with this callback you will recieve the transaction outcome and can react to it
+
+                // optional UI settings
+                payButton: "amountButton",
+                showResponseMessage: true,
+                //autoOpenPM: true,
+                alwaysCollectCvv: false,
+
+
+                fieldStyle: {
+                    "base": {
+                        "iconColor": "#c4f0ff",
+                        "color": "#6b778c",
+                        "fontWeight": 400,
+                        "fontFamily": "Nunito Sans",
+                        "fontSize": "18px",
+                        "fontSmoothing": "antialiased",
+                        ":-webkit-autofill": {
+                            "color": "#ffffff"
+                        },
+                        "::placeholder": {
+                            "color": "#6b778c" // default one picked from chrome
+                        }
+                    },
+                    "invalid": {
+                        "iconColor": "#FFC7EE",
+                        "color": "#FFC7EE"
+                    }
+                }
+            })
+        }
+
+    </script>
+    <!-- <script>
+      window.onload = function() {
+          const containerForCheckout = document.getElementById('cl1')
+          const currentTimestamp = new Date().getTime();
+          console.log('current ts==>',currentTimestamp);
+          
+          containerForCheckout.className = `container_for_checkout_${currentTimestamp}`;
+      };
+  </script> -->
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class='container'>
+        <!-- <div class="item">      
+            <label for="session">Session Token</label>
+            <input type="text" placeholder="Session Token" id="session" name="session" /> 
+          </div>
+          <br/>
+          <div class="item">
+            <label for="metchantID">Merchant Id</label>
+            <input value="" type="text" placeholder="Merchant Id" id="metchantID" /> 
+          </div>
+          <br/>
+          <div class="item">   
+            <label for="metchantSiteID">Merchant Site Id</label>
+            <input value="" type="text" placeholder="Merchant Site Id"  id="metchantSiteID"/> 
+          </div> -->
+        <br />
+        <div class="item100">
+            <button class='pay-button' onclick="initCheckout()">Initialize Checkout</button>
+        </div>
+
+    </div>
+
+    <div id='cl1'></div>
+    <!-- class="container_for_checkout" -->
+</body>
+
+</html>
